@@ -9,7 +9,7 @@ def swap_key_val_01(my_hash)
 
   res_hash = Hash.new
   my_hash.each do |key, val|
-    res_hash[val] = key
+    res_hash[val] = key.to_s
   end
 
   res_hash
@@ -24,7 +24,7 @@ def swap_key_val_02(my_hash)
 
   #p my_hash.to_a
   my_hash.to_a.each do |key_val|
-    my_hash[key_val[1]] = key_val[0]
+    my_hash[key_val[1]] = key_val[0].to_s
     my_hash.delete(key_val[0])
   end
   
@@ -32,13 +32,13 @@ def swap_key_val_02(my_hash)
 end
 
 # returns a new Hash Obj
-def swap_key_val_03(my_hash)
-  is_hash = my_hash.kind_of?(Hash)
-  unless is_hash
-    return "ERROR! Fn input must be an array"
-  end
-  my_hash.invert
-end
+# def swap_key_val_03(my_hash)
+#   is_hash = my_hash.kind_of?(Hash)
+#   unless is_hash
+#     return "ERROR! Fn input must be an array"
+#   end
+#   my_hash.invert
+# end
 
 
 
@@ -53,8 +53,8 @@ puts "Output_01: Hash: #{my_hash_01} with obj_id: #{my_hash_01.object_id}"
 
 puts ""
 
-my_hash_03 = swap_key_val_03(my_hash_00)
-puts "Output_03: Hash: #{my_hash_03} with obj_id: #{my_hash_03.object_id}"
+# my_hash_03 = swap_key_val_03(my_hash_00)
+# puts "Output_03: Hash: #{my_hash_03} with obj_id: #{my_hash_03.object_id}"
 
 puts ""
 
