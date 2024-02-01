@@ -1,11 +1,9 @@
 # Write a program to convert { a: 12, b: 23, c: 34 } to { 12 => "a", 23 => "b", 34 => "c" }
 
 # This function takes an hash as argument and returns a new hash object. <Symbol:Integer> to <Integer:String>
-def swap_key_val_one(my_hash) 
-  is_hash = my_hash.kind_of?(Hash)
-
-  unless is_hash
-    return "ERROR! Fn input must be an array"
+def swap_key_val_one(my_hash)
+  unless my_hash.kind_of?(Hash)
+    return "ERROR! Fn input must be a hash"
   end
 
   res_hash = Hash.new
@@ -19,10 +17,8 @@ end
 
 # This function takes an hash as argument. Modify and returns the same hash object. <Symbol:Integer> to <Integer:String>
 def swap_key_val_two(my_hash) 
-  is_hash = my_hash.kind_of?(Hash)
-  
-  unless is_hash
-    return "ERROR! Fn input must be an array"
+  unless my_hash.kind_of?(Hash)
+    return "ERROR! Fn input must be a hash"
   end
 
   my_hash.to_a.each do |key_val|
