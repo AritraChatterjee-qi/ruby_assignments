@@ -16,10 +16,9 @@ def group_total_marks(marks)
   end
 
   result = Hash.new
-  temp = marks.group_by { |x| x[:id] }
-
-  temp.each do |k,v_arr|
-    result[k] = { total:  v_arr.sum { |x| x[:marks] } }
+  
+  marks.group_by { |x| x[:id] }.each do |key, val|
+    result[key] = { total:  val.sum { |x| x[:marks] } }
   end
   
   result
