@@ -21,17 +21,19 @@ class CountObjClass
   end
 end
 
-c1 = CountObjClass.new
-c1.show_count
-c2 = CountObjClass.new
-c2.show_count
-c3 = CountObjClass.new
-c3.show_count
+count_obj_one = CountObjClass.new
+count_obj_one.show_count
+count_obj_two = CountObjClass.new
+count_obj_two.show_count
+count_obj_three = CountObjClass.new
+count_obj_three.show_count
 print "\n\n"
 
 # Question 2
 # This is a class Rectangle having two instance variable length and breadth and two functions area and perimeter to calculate it
 class Rectangle
+  attr_accessor :length, :breadth
+
   def initialize(length=0, breadth=0)
     @length = length
     @breadth = breadth
@@ -61,20 +63,26 @@ class Rectangle
   end
 end
 
-rec1 = Rectangle.new(10, 10)
-puts "Area of rec1 = #{rec1.area}"
-puts "Perimeter of rec1 = #{rec1.perimeter}"
-rec2 = Rectangle.new()
-puts "Area of rec2 = #{rec2.area}"
-puts "Perimeter of rec2 = #{rec2.perimeter}"
-rec3 = Rectangle.new("10", "10")
-puts "Area of rec2 = #{rec3.area}"
-puts "Perimeter of rec2 = #{rec3.perimeter}"
+rectangle_obj_one = Rectangle.new(10, 10)
+puts "Area of rectangle_obj_one = #{rectangle_obj_one.area}"
+puts "Perimeter of rectangle_obj_one = #{rectangle_obj_one.perimeter}"
+rectangle_obj_two = Rectangle.new()
+puts "Area of rectangle_obj_two = #{rectangle_obj_two.area}"
+puts "Perimeter of rectangle_obj_two = #{rectangle_obj_two.perimeter}"
+rectangle_obj_three = Rectangle.new("10", "10")
+puts "Area of rectangle_obj_three = #{rectangle_obj_three.area}"
+puts "Perimeter of rectangle_obj_three = #{rectangle_obj_three.perimeter}"
+rectangle_obj_three.length = 11
+rectangle_obj_three.breadth = 12
+puts "Area of rectangle_obj_three = #{rectangle_obj_three.area}"
+puts "Perimeter of rectangle_obj_three = #{rectangle_obj_three.perimeter}"
 print "\n\n"
 
 # Question 3
 # This is a class Person having name and age as instance variable and a instance method desribe to print them
 class Person
+  attr_accessor :name, :age
+
   def initialize(name="No Name", age=-1)
     @name = name
     @age = age
@@ -87,6 +95,8 @@ end
 
 # This is a class Engineer, inheriting the class Person and overridding the describe method
 class Engineer < Person
+  attr_accessor :company
+
   def initialize(name="No Name", age=-1, company="No Company")
     super(name, age)
     @company = company
@@ -98,7 +108,11 @@ class Engineer < Person
   end
 end
 
-e1 = Engineer.new("AC", 22, "QI")
-e1.describe()
-e2 = Engineer.new()
-e2.describe()
+engineer_obj_one = Engineer.new("AC", 22, "QI")
+engineer_obj_one.describe()
+engineer_obj_two = Engineer.new()
+engineer_obj_two.describe()
+engineer_obj_two.name = "AC"
+engineer_obj_two.age = 23
+engineer_obj_two.company = "QIDC"
+engineer_obj_two.describe()
