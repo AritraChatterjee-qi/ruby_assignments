@@ -7,7 +7,8 @@
 6. Write a program to define a method inside a module and then use the module in a class such a way that the method can be accessible as an instance method of that class.
 =end
 
-#  Q1
+# Question 1
+# This class have a class variable that stores the number of objects created and a method to display it
 class CountObjClass
   @@count = 0
   
@@ -16,27 +17,28 @@ class CountObjClass
   end
   
   def show_count
-    @@count
+    puts "No. of obj = #{@@count}"
   end
 end
 
 c1 = CountObjClass.new
-puts "No. of obj = #{c1.show_count}"
+c1.show_count
 c2 = CountObjClass.new
-puts "No. of obj = #{c2.show_count}"
+c2.show_count
 c3 = CountObjClass.new
-puts "No. of obj = #{c3.show_count}"
-print "\n\n\n"
+c3.show_count
+print "\n\n"
 
-#  Q2
+# Question 2
+# This is a class Rectangle having two instance variable length and breadth and two functions area and perimeter to calculate it
 class Rectangle
-
   def initialize(length=0, breadth=0)
     @length = length
     @breadth = breadth
   end
 
-  def area()
+  # This functions calculates the area of the reactangle and returns it
+  def area
     begin
       raise ArgumentError, "Argument must be a positive integer" if @length.class!= Integer || @breadth.class!= Integer
       @length * @breadth
@@ -47,7 +49,8 @@ class Rectangle
     end
   end
 
-  def perimeter()
+  # This functions calculates the perimeter of the reactangle and returns it
+  def perimeter
     begin
       2 * (@length + @breadth)
     rescue TypeError => e
@@ -67,9 +70,10 @@ puts "Perimeter of rec2 = #{rec2.perimeter}"
 rec3 = Rectangle.new("10", "10")
 puts "Area of rec2 = #{rec3.area}"
 puts "Perimeter of rec2 = #{rec3.perimeter}"
-print "\n\n\n"
+print "\n\n"
 
-#  Q3
+# Question 3
+# This is a class Person having name and age as instance variable and a instance method desribe to print them
 class Person
   def initialize(name="No Name", age=-1)
     @name = name
@@ -81,6 +85,7 @@ class Person
   end
 end
 
+# This is a class Engineer, inheriting the class Person and overridding the describe method
 class Engineer < Person
   def initialize(name="No Name", age=-1, company="No Company")
     super(name, age)
@@ -97,4 +102,3 @@ e1 = Engineer.new("AC", 22, "QI")
 e1.describe()
 e2 = Engineer.new()
 e2.describe()
-print "\n\n\n"
