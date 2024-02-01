@@ -9,7 +9,7 @@
 
 # Question 1
 # This class have a class variable that stores the number of objects created and a method to display it
-class CountObjClass
+class CountHandler
   @@count = 0
   
   def initialize
@@ -21,11 +21,11 @@ class CountObjClass
   end
 end
 
-count_obj_one = CountObjClass.new
+count_obj_one = CountHandler.new
 count_obj_one.show_count
-count_obj_two = CountObjClass.new
+count_obj_two = CountHandler.new
 count_obj_two.show_count
-count_obj_three = CountObjClass.new
+count_obj_three = CountHandler.new
 count_obj_three.show_count
 print "\n\n"
 
