@@ -19,13 +19,7 @@ def group_total_marks(marks)
   temp = marks.group_by { |x| x[:id] }
 
   temp.each do |k,v_arr|
-    total = 0
-
-    v_arr.each do |x|
-      total += x[:marks]
-    end
-    
-    result[k] = { total:  total }
+    result[k] = { total:  v_arr.sum { |x| x[:marks] } }
   end
   
   result
