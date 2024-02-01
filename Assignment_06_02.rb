@@ -7,62 +7,59 @@
 6. Write a program to define a method inside a module and then use the module in a class such a way that the method can be accessible as an instance method of that class.
 =end
 
-#  Q4
-module Module1
+# Question 4
+# This is ModuleOne having a static function greet
+module ModuleOne
   def self.greet(name)
     puts "Hello #{name}"
   end
 end
 
-module Module2
+# This is ModuleTwo having a static function greet
+module ModuleTwo
   def self.greet(name)
     puts "Hi #{name}"
   end
 end
 
+# This a class, using the ModuleOne and ModuleTwo having two methods say_hello and say_hi
 class Question4
-  include Module1, Module2
-
+  include ModuleOne, ModuleTwo
 
   def say_hello(name)
-    Module1.greet(name)
+    ModuleOne.greet(name)
   end
+
   def say_hi(name)
-    Module2::greet(name)
+    ModuleTwo::greet(name)
   end
 end
 
 q4 = Question4.new
 q4.say_hello("AC")
 q4.say_hi("AC")
-print "\n\n\n"
+print "\n\n"
 
-# Q5
-module Ques5
-  def hello_world()
-    puts "Hello World - Q5"
+# This is a HelloWorld module having a function print_hello_world
+module HelloWorld
+  def print_hello_world
+    puts "Hello World"
   end
 end
 
+# Question 5
+# This is a class using the HelloWorld module with the extend keyword
 class Question5
-  extend Ques5
+  extend HelloWorld
 end
 
-Question5.hello_world()
-print "\n\n\n"
+Question5.print_hello_world()
+print "\n\n"
 
-# Q6
-module Ques6
-  def hello_world()
-    puts "Hello World - Q6"
-  end
-end
-
+# Question 6
+# This is a class using the HelloWorld module with the include keyword
 class Question6
-  include Ques6
+  include HelloWorld
 end
 
-# q6 = Question6.new
-# q6.hello_world()
-Question6.new.hello_world()
-print "\n\n\n"
+Question6.new.print_hello_world()
