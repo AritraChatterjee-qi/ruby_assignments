@@ -1,27 +1,29 @@
+# This fuction takes an integer array as an argument and returns the sum of all the element.
 def arraySum(arr)
-  isArray = arr.kind_of?(Array)
-  if !isArray
-    return "ERROR! Fn input must be an array"
+  is_array = arr.kind_of?(Array)
+  
+  if !is_array
+    return "ERROR! Function input must be an array"
   end
 
   sum = 0;
 
-  # for loop
+  # using for loop to calculate the sum of all elements in the array
   #for i in 0...arr.length
   #  sum += arr[i];
   #end
 
-  # for in loop
+  # fusing or in loop to calculate the sum of all elements in the array
   #for ele in arr
   #    sum += ele;
   #end
 
-  # for each loop
+  # using for each loop to calculate the sum of all elements in the array
   arr.each do |ele|
      sum += ele;
   end
 
-  # while loop
+  # using while loop to calculate the sum of all elements in the array
   #idx = 0;
   #while idx < arr.length
   #  sum += arr[idx];
@@ -31,6 +33,6 @@ def arraySum(arr)
     sum;
 end
 
-ar = [1,2,3,4,5,6,7,8,9,10];
-res = arraySum(ar);
-puts "Sum of input #{ar} is #{res}";
+arr = [1,2,3,4,5,6,7,8,9,10,11];
+result = arraySum(arr);
+puts "Sum of input #{arr} is #{result}";
