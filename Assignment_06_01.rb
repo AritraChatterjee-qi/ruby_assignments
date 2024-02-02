@@ -43,7 +43,7 @@ class Rectangle
   def area
     begin
       raise ArgumentError, "Argument must be a positive integer" if @length.class!= Integer || @breadth.class!= Integer
-      @length * @breadth
+      length * breadth
     rescue TypeError => e
       return "Error: #{e}"
     rescue => e
@@ -54,7 +54,7 @@ class Rectangle
   # This functions calculates the perimeter of the reactangle and returns it
   def perimeter
     begin
-      2 * (@length + @breadth)
+      2 * (length + breadth)
     rescue TypeError => e
       return "Error: #{e}"
     rescue => e
@@ -89,7 +89,7 @@ class Person
   end
 
   def describe
-    puts "Name: #{@name}, Age: #{@age}"
+    puts "Name: #{name}, Age: #{age}"
   end
 end
 
@@ -104,7 +104,7 @@ class Engineer < Person
 
   def describe
     super
-    puts "Company: #{@company}"
+    puts "Company: #{company}"
   end
 end
 
