@@ -45,7 +45,7 @@ class TaskHandler
     @input = input
   end
 
-  def validate
+  private def validate
     unless @input.kind_of?(Array)
       puts "Input must be Array"
       return false
