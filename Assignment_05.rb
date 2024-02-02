@@ -40,69 +40,85 @@ expected output format:
 
 require 'date'
 
-class TaskHandler
-  def initialize(input)
-    @input = input
+class Task
+  attr_accessor :id, :name, :time_logs
+
+  def initialize(id="deafult", name="deafult", time_logs=[])
+    @id = id
+    @name = name
+    @time_logs = time_logs
   end
 
-  private def validate
-    unless @input.kind_of?(Array)
-      puts "Input must be Array"
-      return false
-    end
-
-    @input.each_with_index do |task, index|
-      task[:time_logs].each do |time_log|
-        if DateTime.parse(time_log[0]) > DateTime.parse(time_log[1])
-          puts "Time logs validation failed for id = #{task[:id]} and name = #{task[:name]}"
-          return false
-        end
-      end
-    end
-
-    return true;
-  end
-
-  # This is the main entry method of the program. It takes the input and returns the output.
-  def get_report_output()
-    unless validate
-      return "Validation Failed"
-    end
-
-    res = {
-      categories: [],
-      total_time_in_min: [],
-      total_time_in_min_percent: []
-    }
-
-    @input.each_with_index do |task, index|
-      res[:categories] << task[:name]
-      res[:total_time_in_min] << calculate_total_time_in_min(task[:time_logs])
-      res[:total_time_in_min_percent] << calculate_total_time_in_min_percent(res[:total_time_in_min][index])
-    end
-
-    return res
-  end
-
-  # This method takes all the time log for a task and returns the total time used for that task
-  def calculate_total_time_in_min(time_logs)
-    time_logs.sum { |time_log| get_time_duration_in_min(time_log) }.round()
-  end
-
-  # This methods takes an time log array as argument [start_time, end_time] and retures the duration in minute
-  def get_time_duration_in_min(time_log)
-    duration = DateTime.parse(time_log[1]) - DateTime.parse(time_log[0])
-    duration = duration.to_f * 24 * 60
-    return duration.to_f
+  # This method returns the total time used for the task
+  def total_time_in_minute
+    time_logs.sum { |time_log| get_time_duration_in_minute(time_log[0], time_log[1]) }.round()
   end
 
   # This method takes total time used for a task and returns the in percentage form for a day
-  def calculate_total_time_in_min_percent(total_time_in_min)
-    (total_time_in_min.to_f / (24 * 60) * 100).round(2)
+  def occupation_percecntage_day_wise(total_time_in_minute)
+    (total_time_in_minute.to_f / (24 * 60) * 100).round(2)
+  end
+
+  # This method validate the the time logs
+  def validate_time_logs
+    time_logs.each do |time_log|
+      if DateTime.parse(time_log[0]) > DateTime.parse(time_log[1])
+        puts "Time logs validation failed for id = #{id} and name = #{name}"
+        return false
+      end
+    end
+    true
+  end
+
+  private
+
+  # This methods takes an time log array as argument [start_time, end_time] and retures the duration in minute
+  def get_time_duration_in_minute(start_time, end_time)
+    duration = DateTime.parse(end_time) - DateTime.parse(start_time)
+    duration.to_f * 24 * 60
   end
 end
 
-task_one = TaskHandler.new([
+class TaskHandler
+  attr_reader :tasks
+
+  def initialize
+    @tasks = []
+  end
+
+  def add_task(task)
+  end
+
+  def add_all_task(tasks)
+    tasks.each do |a_task|
+      some_task = Task.new(a_task[:id], a_task[:name], a_task[:time_logs])
+      if some_task.validate_time_logs
+        @tasks << some_task
+      else
+        puts "Task with id: #{a_task[:id]} not added"
+      end
+    end
+  end
+
+  def process_input
+    report = {
+      categories: [],
+      total_time_in_min: [],
+      occupation_percecntage: []
+    }
+
+    tasks.each_with_index do |task, index|
+      report[:categories] << task.name
+      report[:total_time_in_min] << task.total_time_in_minute
+      report[:occupation_percecntage] << task.occupation_percecntage_day_wise(report[:total_time_in_min][index])
+    end
+    
+    report
+  end
+end
+
+task_day_one = TaskHandler.new
+task_day_one.add_all_task([
   { id: 1, name: "task1", time_logs: [["2023-01-01 9:30:00", "2023-01-01 10:30:00"],
                                       ["2023-01-01 12:00:00", "2023-01-01 13:00:00"]] },
   { id: 2, name: "task2", time_logs: [["2023-01-01 10:30:00", "2023-01-01 11:30:00"],
@@ -114,4 +130,4 @@ task_one = TaskHandler.new([
   { id: 6, name: "task6", time_logs: [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] },
 ])
 
-puts "Output: #{task_one.get_report_output}"
+puts "Output: #{task_day_one.process_input}"
