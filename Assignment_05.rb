@@ -59,23 +59,37 @@ class Task
     (total_time_in_minute.to_f / (24 * 60) * 100).round(2)
   end
 
-  # This method validate the the time logs
-  def validate_time_logs
-    time_logs.each do |time_log|
-      if DateTime.parse(time_log[0]) > DateTime.parse(time_log[1])
-        puts "Time logs validation failed for id = #{id} and name = #{name}"
-        return false
-      end
+  # This methods creates a obj of Task class and returs it after validation else nil
+  def add(id="deafult", name="deafult", time_logs=[])
+    a_task = Task.new(id, name, time_logs)
+
+    if validate_time_logs(id, name, time_logs)
+      a_task
+    else
+      nil
     end
-    true
   end
 
   private
-
+  
   # This methods takes an time log array as argument [start_time, end_time] and retures the duration in minute
   def get_time_duration_in_minute(start_time, end_time)
     duration = DateTime.parse(end_time) - DateTime.parse(start_time)
     duration.to_f * 24 * 60
+  end
+
+  # This method validate the the time logs
+  def validate_time_logs(id, name, time_logs)
+    time_logs.each do |time_log|
+      if DateTime.parse(time_log[0]) > DateTime.parse(time_log[1])
+        puts "Time logs validation failed - end time earlier than start time - for id = #{id} and name = #{name}"
+        return false
+      elsif DateTime.parse(time_log[0]) == DateTime.parse(time_log[1])
+        puts "Time logs validation failed - start time and end time can't be same - for id = #{id} and name = #{name}"
+        return false
+      end
+    end
+    true
   end
 end
 
@@ -86,13 +100,19 @@ class TaskHandler
     @tasks = []
   end
 
-  def add_task(task)
+  def add_one_task(a_task)
+    some_task = Task.new.add(a_task[:id], a_task[:name], a_task[:time_logs])
+    if some_task
+      @tasks << some_task
+    else
+      puts "Task with id: #{a_task[:id]} not added"
+    end
   end
 
-  def add_all_task(tasks)
+  def add_many_task(tasks)
     tasks.each do |a_task|
-      some_task = Task.new(a_task[:id], a_task[:name], a_task[:time_logs])
-      if some_task.validate_time_logs
+      some_task = Task.new.add(a_task[:id], a_task[:name], a_task[:time_logs])
+      if some_task
         @tasks << some_task
       else
         puts "Task with id: #{a_task[:id]} not added"
@@ -118,7 +138,7 @@ class TaskHandler
 end
 
 task_day_one = TaskHandler.new
-task_day_one.add_all_task([
+task_day_one.add_many_task([
   { id: 1, name: "task1", time_logs: [["2023-01-01 9:30:00", "2023-01-01 10:30:00"],
                                       ["2023-01-01 12:00:00", "2023-01-01 13:00:00"]] },
   { id: 2, name: "task2", time_logs: [["2023-01-01 10:30:00", "2023-01-01 11:30:00"],
@@ -129,5 +149,9 @@ task_day_one.add_all_task([
   { id: 5, name: "task5", time_logs: [["2023-01-01 16:30:00", "2023-01-01 17:30:00"]] },
   { id: 6, name: "task6", time_logs: [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] },
 ])
+task_day_one.add_one_task({ id: 7, name: "task7", time_logs: [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] })
+task_day_one.add_one_task({ id: 8, name: "task8", time_logs: [["2023-01-01 19:30:00", "2023-01-01 18:30:00"]] })
+task_day_one.add_one_task({ id: 9, name: "task9", time_logs: [["2023-01-01 18:30:00", "2023-01-01 18:30:00"]] })
+task_day_one.add_one_task({ id: 10, name: "task10", time_logs: [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] })
 
 puts "Output: #{task_day_one.process_input}"
