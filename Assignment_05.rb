@@ -51,7 +51,7 @@ class Task
 
   # This method returns the total time used for the task
   def total_time_in_minute
-    time_logs.sum { |time_log| get_time_duration_in_minute(time_log[0], time_log[1]) }.round()
+    time_logs.sum { |time_log| get_time_duration_in_minute(time_log[0], time_log[1]) }.round
   end
 
   # This method takes total time used for a task and returns the in percentage form for a day
@@ -59,15 +59,9 @@ class Task
     (total_time_in_minute.to_f / (24 * 60) * 100).round(2)
   end
 
-  # This methods creates a obj of Task class and returs it after validation else nil
-  def add(id="deafult", name="deafult", time_logs=[])
-    a_task = Task.new(id, name, time_logs)
-
-    if validate_time_logs(id, name, time_logs)
-      a_task
-    else
-      nil
-    end
+  # This method does the validation
+  def valid?
+    validate_time_logs
   end
 
   private
@@ -79,7 +73,7 @@ class Task
   end
 
   # This method validate the the time logs
-  def validate_time_logs(id, name, time_logs)
+  def validate_time_logs
     time_logs.each do |time_log|
       if DateTime.parse(time_log[0]) > DateTime.parse(time_log[1])
         puts "Time logs validation failed - end time earlier than start time - for id = #{id} and name = #{name}"
@@ -100,22 +94,22 @@ class TaskHandler
     @tasks = []
   end
 
-  def add_one_task(a_task)
-    some_task = Task.new.add(a_task[:id], a_task[:name], a_task[:time_logs])
-    if some_task
-      @tasks << some_task
+  def add_one_task(task_attributes)
+    task = Task.new(task_attributes[:id], task_attributes[:name], task_attributes[:time_logs])
+    if task.valid?
+      @tasks << task
     else
-      puts "Task with id: #{a_task[:id]} not added"
+      puts "Task with id: #{task_attributes[:id]} not added"
     end
   end
 
-  def add_many_task(tasks)
-    tasks.each do |a_task|
-      some_task = Task.new.add(a_task[:id], a_task[:name], a_task[:time_logs])
-      if some_task
-        @tasks << some_task
+  def add_many_task(task_attr_array)
+    task_attr_array.each do |task_attr|
+      task = Task.new(task_attr[:id], task_attr[:name], task_attr[:time_logs])
+      if task.valid?
+        @tasks << task
       else
-        puts "Task with id: #{a_task[:id]} not added"
+        puts "Task with id: #{task_attr[:id]} not added"
       end
     end
   end
