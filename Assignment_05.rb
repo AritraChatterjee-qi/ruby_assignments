@@ -61,7 +61,7 @@ class Task
 
   # This method does the validation
   def valid?
-    validate_time_logs
+    validate_input_format && validate_time_logs
   end
 
   private
@@ -85,6 +85,49 @@ class Task
     end
     true
   end
+  
+  #This method validate the input format
+  def validate_input_format
+    if id==nil || id=="deafult"
+      puts "Input format validation failed - A Task must contain an id"
+      return false
+    elsif name==nil || name=="deafult"
+      puts "Input format validation failed - A Task must contain a name"
+      return false
+    elsif time_logs==nil || time_logs==[]
+      puts "Input format validation failed - A Task must contain time logs array which can't be empty"
+      return false
+    end
+    
+    unless name.kind_of?(String)
+      puts "Input format validation failed - Name must be a string"
+      return false
+    end
+
+    unless time_logs.kind_of?(Array)
+      puts "Input format validation failed - Time logs must be array"
+      return false
+    end
+
+    time_logs.each do |time_log|
+      unless time_log.kind_of?(Array)
+        puts "Input format validation failed - Each time log inside time logs must be an array"
+        return false
+      end
+
+      unless time_log.length==2
+        puts "Input format validation failed - Each time log inside time logs must be an array of size two"
+        return false
+      end
+
+      unless time_log[0].kind_of?(String) || time_log[1].kind_of?(String)
+        puts "Input format validation failed - Each time log inside time logs must be an array of size two of type string"
+        return false
+      end
+    end
+
+    true
+  end
 end
 
 class TaskHandler
@@ -95,22 +138,25 @@ class TaskHandler
   end
 
   def add_one_task(task_attributes)
-    task = Task.new(task_attributes[:id], task_attributes[:name], task_attributes[:time_logs])
-    if task.valid?
-      @tasks << task
-    else
-      puts "Task with id: #{task_attributes[:id]} not added"
+    begin
+      task = Task.new(task_attributes[:id], task_attributes[:name], task_attributes[:time_logs])
+      if task.valid?
+        @tasks << task
+      else
+        puts "Task with id: #{task_attributes[:id]} not added"
+      end
+    rescue => e
+      puts "Error occured in adding task: #{e.message}"
     end
   end
 
   def add_many_task(task_attr_array)
-    task_attr_array.each do |task_attr|
-      task = Task.new(task_attr[:id], task_attr[:name], task_attr[:time_logs])
-      if task.valid?
-        @tasks << task
-      else
-        puts "Task with id: #{task_attr[:id]} not added"
+    begin
+      task_attr_array.each do |task_attr|
+        self.add_one_task(task_attr)
       end
+    rescue => e
+      puts "Error occured in adding task: #{e.message}"
     end
   end
 
@@ -120,13 +166,17 @@ class TaskHandler
       total_time_in_min: [],
       occupation_percecntage: []
     }
-
-    tasks.each_with_index do |task, index|
-      report[:categories] << task.name
-      report[:total_time_in_min] << task.total_time_in_minute
-      report[:occupation_percecntage] << task.occupation_percecntage_day_wise(report[:total_time_in_min][index])
-    end
     
+    begin
+      tasks.each_with_index do |task, index|
+        report[:categories] << task.name
+        report[:total_time_in_min] << task.total_time_in_minute
+        report[:occupation_percecntage] << task.occupation_percecntage_day_wise(report[:total_time_in_min][index])
+      end
+    rescue => e
+      puts "Error occured in adding task: #{e.message}"
+    end
+
     report
   end
 end
@@ -147,5 +197,6 @@ task_day_one.add_one_task({ id: 7, name: "task7", time_logs: [["2023-01-01 17:30
 task_day_one.add_one_task({ id: 8, name: "task8", time_logs: [["2023-01-01 19:30:00", "2023-01-01 18:30:00"]] })
 task_day_one.add_one_task({ id: 9, name: "task9", time_logs: [["2023-01-01 18:30:00", "2023-01-01 18:30:00"]] })
 task_day_one.add_one_task({ id: 10, name: "task10", time_logs: [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] })
+task_day_one.add_one_task({ id: 13, name: "12", time_logs: [[123, 123]] })
 
 puts "Output: #{task_day_one.process_input}"
