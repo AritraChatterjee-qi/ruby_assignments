@@ -75,7 +75,7 @@ class Task
   # This method validate the the id
   def validates_id
     if id.nil?
-      puts "Task - validates_id failed - A Task must contain an id"
+      puts "Task - validates_id failed - A Task must contain an attribute id"
       return false
     end
 
@@ -90,7 +90,7 @@ class Task
   # This method validate the the name
   def validates_name
     if name.nil?
-      puts "Task - validates_name failed - A Task must contain a name"
+      puts "Task - validates_name failed - A Task must contain an attribute name"
       return false
     end
 
@@ -105,7 +105,7 @@ class Task
   # This method validate the the time logs
   def validates_time_logs
     if time_logs.nil?
-      puts "Task - validates_time_logs failed - A Task must contain time_logs"
+      puts "Task - validates_time_logs failed - A Task must contain an attribute time_logs"
       return false
     end
 
@@ -139,7 +139,7 @@ class Task
     end
 
     unless is_valid_date_time_format(time_log[0]) && is_valid_date_time_format(time_log[1])
-      puts "Task - validates_time_log failed - Each time log inside time logs must be in YYYY-MM-DD hh:mm:ss format"
+      puts "Task - validates_time_log failed - start time and end time must be in YYYY-MM-DD hh:mm:ss format"
       return false
     end
 
@@ -168,28 +168,24 @@ class TaskHandler
   end
 
   def add_task(task_attributes)
-    begin
-      self.validate_inputs(task_attributes)
-      task = Task.new(task_attributes[:id], task_attributes[:name], task_attributes[:time_logs])
-      if task.valid?
-        @tasks << task
-      else
-        puts "Task with id: #{task_attributes[:id]} not added"
-      end
-    rescue => e
-      puts "Error occured in add_task: #{e.message}"
+    task = Task.new(task_attributes[:id], task_attributes[:name], task_attributes[:time_logs])
+    self.check_id_uniqueness(task_attributes[:id])
+    if task.valid?
+      @tasks << task
+    else
       puts "Task with id: #{task_attributes[:id]} not added"
     end
+  rescue => e
+    puts "Error occured in add_task: #{e.message}"
+    puts "Task with id: #{task_attributes[:id]} not added"
   end
 
   def add_tasks(task_attr_array)
-    begin
-      task_attr_array.each do |task_attr|
-        self.add_task(task_attr)
-      end
-    rescue => e
-      puts "Error occured in add_tasks: #{e.message}"
+    task_attr_array.each do |task_attr|
+      self.add_task(task_attr)
     end
+  rescue => e
+    puts "Error occured in add_tasks: #{e.message}"
   end
 
   def process_input
@@ -199,32 +195,27 @@ class TaskHandler
       occupation_percecntage: []
     }
     
-    begin
-      tasks.each_with_index do |task, index|
-        report[:categories] << task.name
-        report[:total_time_in_min] << task.total_time_in_minute
-        report[:occupation_percecntage] << task.occupation_percecntage_day_wise(report[:total_time_in_min][index])
-      end
-    rescue => e
-      puts "Error occured in process_input: #{e.message}"
+    tasks.each_with_index do |task, index|
+      report[:categories] << task.name
+      report[:total_time_in_min] << task.total_time_in_minute
+      report[:occupation_percecntage] << task.occupation_percecntage_day_wise(report[:total_time_in_min][index])
     end
 
     report
+  rescue => e
+    puts "Error occured in process_input: #{e.message}"
   end
 
   private
 
-  def validate_inputs(task_attributes)
-    raise "Attribute id of Task is not present" if task_attributes[:id].nil?
-    raise "Attribute name of Task is not present" if task_attributes[:name].nil?
-    raise "Attribute time_logs of Task is not present" if task_attributes[:time_logs].nil?
-    raise "Task with id: #{task_attributes[:id]} alredy present" if self.tasks.any? { |task| task.id == task_attributes[:id] }
+  def check_id_uniqueness(id)
+    raise "Task with id: #{id} alredy present" if self.tasks.any? { |task| task.id == id }
   end
 end
 
 task_day_one = TaskHandler.new
 task_day_one.add_tasks([
-  { id: 1, name: "task1", time_logs: [["2023-01-01 9:30:00", "2023-01-01 10:30:00"],
+  { id: 1, name: "task1", time_logs: [["2023-01-01 09:30:00", "2023-01-01 10:30:00"],
                                       ["2023-01-01 12:00:00", "2023-01-01 13:00:00"]] },
   { id: 2, name: "task2", time_logs: [["2023-01-01 10:30:00", "2023-01-01 11:30:00"],
                                       ["2023-01-01 13:00:00", "2023-01-01 14:30:00"]] },
@@ -238,6 +229,6 @@ task_day_one.add_task({ id: 7, name: "task7", time_logs: [["2023-01-01 17:30:00"
 task_day_one.add_task({ id: 8, name: "task8", time_logs: [["2023-01-01 19:30:00", "2023-01-01 18:30:00"]] })
 task_day_one.add_task({ id: 9, name: "task9", time_logs: [["2023-01-01 18:30:00", "2023-01-01 18:30:00"]] })
 task_day_one.add_task({ id: 10, name: "task10", time_logs: [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] })
-task_day_one.add_task({ id: 13, name: "task13", time_logs: [["2023-01-01 17:30:00", "2023-01-01"]] })
+task_day_one.add_task({ id: 13, name: "task13", time_logs: [["2023-02-30 17:30:00", "2023-01-01 18:70:00"]] })
 
 puts "Output: #{task_day_one.process_input}"
