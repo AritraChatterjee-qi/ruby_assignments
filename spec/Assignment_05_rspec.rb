@@ -2,7 +2,7 @@ require_relative '../Assignment_05.rb'
 
 RSpec.describe Task do 
   describe "#total_time_in_minute" do
-    it "Calculate the total tine for a particular class" do 
+    it "Calculate the total time for a particular class" do 
       task = Task.new( 10, "task10", [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] )
       output = task.total_time_in_minute
       expect(output).to eq 60
@@ -10,7 +10,7 @@ RSpec.describe Task do
   end
 
   describe "#occupation_percecntage_day_wise" do
-    it "Calculate the total tine for a particular class as percentage of a day" do 
+    it "Calculate the total time for a particular class as percentage of a day" do 
       task = Task.new( 10, "task10", [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] )
       output = task.occupation_percecntage_day_wise(task.total_time_in_minute)
       expect(output).to eq 4.17
