@@ -139,7 +139,7 @@ class Task
     end
 
     unless is_valid_date_time_format(time_log[0]) && is_valid_date_time_format(time_log[1])
-      puts "Task - validates_time_log failed - Each time log inside time logs must be proper date-time format"
+      puts "Task - validates_time_log failed - Each time log inside time logs must be in YYYY-MM-DD hh:mm:ss format"
       return false
     end
 
