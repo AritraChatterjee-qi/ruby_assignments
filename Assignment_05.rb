@@ -55,8 +55,19 @@ class Task
   end
 
   # This method takes total time used for a task and returns the in percentage form for a day
-  def occupation_percecntage_day_wise(total_time_in_minute)
-    (total_time_in_minute.to_f / (24 * 60) * 100).round(2)
+  def occupation_percecntage(total_time_in_minute, period)
+    case period
+    when "daily"
+      (total_time_in_minute.to_f / (24 * 60) * 100).round(2)
+    when "weekly"
+      (total_time_in_minute.to_f / (24 * 60 * 7) * 100).round(2)
+    when "monthly"
+      (total_time_in_minute.to_f / (24 * 60 * 30) * 100).round(2)
+    when "quarterly" 
+      (total_time_in_minute.to_f / (24 * 60 * 30 * 3) * 100).round(2)
+    when "yearly"
+      (total_time_in_minute.to_f / (24 * 60 * 365) * 100).round(2)
+    end
   end
 
   # This method does the validation
@@ -188,17 +199,20 @@ class TaskHandler
     puts "Error occured in add_tasks: #{e.message}"
   end
 
-  def process_input
+  def process_input(properties)
+    self.validate_process_input_properties(properties)
+
     report = {
       categories: [],
       total_time_in_min: [],
+      period: properties[:period],
       occupation_percecntage: []
     }
     
     tasks.each_with_index do |task, index|
       report[:categories] << task.name
       report[:total_time_in_min] << task.total_time_in_minute
-      report[:occupation_percecntage] << task.occupation_percecntage_day_wise(report[:total_time_in_min][index])
+      report[:occupation_percecntage] << task.occupation_percecntage(report[:total_time_in_min][index], properties[:period])
     end
 
     report
@@ -210,6 +224,21 @@ class TaskHandler
 
   def check_id_uniqueness(id)
     raise "Task with id: #{id} alredy present" if self.tasks.any? { |task| task.id == id }
+  end
+
+  def validate_process_input_properties(properties)
+    unless properties.kind_of?(Hash)
+      raise "Argument to process_input must be a hash"
+    end
+
+    if properties[:period].nil?
+      raise "Argument to process_input must be a hash and have a key period of type symbol"
+    end
+
+    period_options = ['daily', 'weekly', 'monthly', 'quarterly', 'yearly']
+    unless period_options.include?(properties[:period])
+      raise "Period must be among daily / weekly / monthly / quarterly / yearly "
+    end
   end
 end
 
@@ -231,4 +260,11 @@ task_day_one.add_task({ id: 9, name: "task9", time_logs: [["2023-01-01 18:30:00"
 task_day_one.add_task({ id: 10, name: "task10", time_logs: [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] })
 task_day_one.add_task({ id: 13, name: "task13", time_logs: [["2023-02-30 17:30:00", "2023-01-01 18:70:00"]] })
 
-puts "Output: #{task_day_one.process_input}"
+# weekly
+task_day_one.add_task({ id: 14, name: "task14", time_logs: [["2023-01-01 17:30:00", "2023-01-08 17:30:00"]] })
+
+# monthly
+task_day_one.add_task({ id: 15, name: "task15", time_logs: [["2023-01-01 17:30:00", "2023-01-31 17:30:00"]] })
+
+output = task_day_one.process_input({ period: 'weekly' })
+puts "Output: #{output}"
