@@ -63,7 +63,6 @@ RSpec.describe Task do
      end
 
      context "When the input is invalid" do
-
         context "When the id is invalid" do
          it "Tests the input and checks if the id is nil return false" do
             task = Task.new( nil, "task10", [["2023-01-01 19:30:00", "2023-01-01 18:30:00"]] )
@@ -142,6 +141,25 @@ RSpec.describe Task do
 end
 
 RSpec.describe TaskHandler do 
+  describe "#add_task" do
+    context "When the ids are duplicate" do
+      it "if the add_task gets duplicate ids raise error" do
+         task_handler = TaskHandler.new
+         task_handler.add_task({ id: 9, name: "task9", time_logs: [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] })
+         expect { task_handler.add_task({ id: 9, name: "task9", time_logs: [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] }) }.to raise_error("Task with id: 9 alredy present") 
+      end
+    end
+  end
+  
+  describe "#add_tasks" do
+    context "When the ids are duplicate" do
+      it "if the add_tasks gets duplicate ids raise error" do
+         task_handler = TaskHandler.new
+         expect { task_handler.add_tasks([{ id: 9, name: "task9", time_logs: [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] }, { id: 9, name: "task9", time_logs: [["2023-01-01 17:30:00", "2023-01-01 18:30:00"]] }]) }.to raise_error("Task with id: 9 alredy present")
+      end
+    end
+  end
+
   describe "#process_input" do
      context "When the input is valid" do
         it "proccess the input and generates the empty output" do
