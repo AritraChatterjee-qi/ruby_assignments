@@ -55,7 +55,7 @@ class Task
   end
 
   # This method takes total time used for a task and returns the in percentage form for a day
-  def occupation_percecntage(total_time_in_minute, period)
+  def occupancy_percentage(total_time_in_minute, period)
     case period
     when "daily"
       (total_time_in_minute.to_f / (24 * 60) * 100).round(2)
@@ -206,13 +206,13 @@ class TaskHandler
       categories: [],
       total_time_in_min: [],
       period: properties[:period],
-      occupation_percecntage: []
+      occupancy_percentage: []
     }
     
     tasks.each_with_index do |task, index|
       report[:categories] << task.name
       report[:total_time_in_min] << task.total_time_in_minute
-      report[:occupation_percecntage] << task.occupation_percecntage(report[:total_time_in_min][index], properties[:period])
+      report[:occupancy_percentage] << task.occupancy_percentage(report[:total_time_in_min][index], properties[:period])
     end
 
     report
